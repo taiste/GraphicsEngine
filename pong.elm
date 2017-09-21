@@ -1,16 +1,16 @@
-import Engine (..)
-import Engine.Material.Material (MaterialProperty)
-import Math.Vector3 (vec3, Vec3)
-import Engine.Shader.GouraudShader (gouraudShader)
+import Engine exposing (..)
+import Engine.Material.Material exposing  (MaterialProperty)
+import Math.Vector3 exposing (vec3, Vec3)
+import Engine.Shader.GouraudShader exposing  (gouraudShader)
 
-import Time (..)
-import Signal (..)
-import Keyboard
-import Window
+import Time exposing (..)
+import Signal exposing (..)
+import Keyboard exposing (..)
+import Window exposing (..) 
 
-import Array (fromList)
+import Array exposing (fromList)
 
-import Graphics.Element (Element)
+import Graphics.Element exposing (Element)
 
 -- INPUT
 
@@ -82,33 +82,33 @@ within ball player =
 
 stepV : Float -> Bool -> Bool -> Float
 stepV v lowerCollision upperCollision =
-  if | lowerCollision -> abs v
-     | upperCollision -> 0 - abs v
-     | otherwise      -> v
+  if lowerCollision then abs v
+  else if upperCollision then 0 - abs v
+  else v
 
 
 stepObj : Time -> Object a -> Object a
 stepObj t ({x,y,vx,vy} as obj) =
-  { obj | x <- x + vx * t,
-          y <- y + vy * t }
+  { obj | x = x + vx * t,
+          y = y + vy * t }
 
 stepBall : Time -> Ball -> Player -> Player -> Ball
 stepBall t ({x,y,vx,vy} as ball) player1 player2 =
   if not (ball.x |> near 0 halfWidth)
-  then { ball | x <- 0, y <- 0}
+  then { ball | x = 0, y = 0}
   else
-    let vx' = stepV vx (ball `within` player1) (ball `within` player2)
-        vy' = stepV vy (y < 7 - halfHeight) (y > halfHeight - 7)
+    let vx2 = stepV vx (within ball player1) (within ball player2)
+        vy2 = stepV vy (y < 7 - halfHeight) (y > halfHeight - 7)
     in
-      stepObj t { ball | vx <- vx', vy <- vy' }
+      stepObj t { ball | vx = vx2, vy = vy2 }
 
 stepPlyr : Time -> Int -> Int -> Player -> Player
 stepPlyr t dir points player =
-  let player' = stepObj t { player | vy <- toFloat dir * 200 }
-      y' = clamp (22 - halfHeight) (halfHeight - 22) player'.y
-      score' = player.score + points
+  let player2 = stepObj t { player | vy = toFloat dir * 200 }
+      y2 = clamp (22 - halfHeight) (halfHeight - 22) player2.y
+      score2 = player.score + points
   in
-    { player' | y <- y', score <- score' }
+    { player2 | y = y2, score = score2 }
 
 stepGame : Input -> Game -> Game
 stepGame {space, paddle1, paddle2, delta}
@@ -116,21 +116,21 @@ stepGame {space, paddle1, paddle2, delta}
   let score1 = if ball.x > halfWidth then 1 else 0
       score2 = if ball.x < -halfWidth then 1 else 0
 
-      state' = if | space            -> Play
-                  | score1 /= score2 -> Pause
-                  | otherwise        -> state
+      state2 = if space then Play
+               else if score1 /= score2 then Pause
+               else state
 
-      ball' = if state == Pause then ball
+      ball2 = if state == Pause then ball
               else stepBall delta ball player1 player2
 
-      player1' = stepPlyr delta paddle1 score1 player1
-      player2' = stepPlyr delta paddle2 score2 player2
+      player1after = stepPlyr delta paddle1 score1 player1
+      player2after = stepPlyr delta paddle2 score2 player2
 
   in
-    { game | state   <- state',
-             ball    <- ball',
-             player1 <- player1,
-             player2 <- player2'}
+    { game | state   = state2,
+             ball    = ball2,
+             player1 = player1,
+             player2 = player2after}
 
 
 gameState : Signal Game
@@ -145,58 +145,58 @@ red   = vec3 1 0 0
 
 gouraudMaterial : Vec3 -> Material
 gouraudMaterial color = {
-  material | fragmentShader <- gouraudShader,
-             emissive <- MaterialProperty color 1.0,
-             ambient  <- MaterialProperty white 0.4,
-             diffuse  <- MaterialProperty white 0.4,
-             specular <- MaterialProperty white 0.5 }
+  material | fragmentShader = gouraudShader,
+             emissive = MaterialProperty color 1.0,
+             ambient  = MaterialProperty white 0.4,
+             diffuse  = MaterialProperty white 0.4,
+             specular = MaterialProperty white 0.5 }
 
 
 
 displayObj : Object a -> Renderable -> Renderable
 displayObj object renderable =
-  {renderable | position <- vec3 object.x object.y 0,
-                material <- gouraudMaterial blue }
+  {renderable | position = vec3 object.x object.y 0,
+                material = gouraudMaterial blue }
 
 ballShape : Float -> Renderable
 ballShape radius =
-  { sphere | scale <- vec3 radius radius radius,
-             material <- gouraudMaterial red }
+  { sphere | scale = vec3 radius radius radius,
+             material = gouraudMaterial red }
 
 background : Vec3 -> Float -> Float -> Renderable
 background color width height =
-  { cube | position <- vec3 0 0 1,
-           scale <- vec3 width height 0.5,
-           material <- gouraudMaterial color }
+  { cube | position = vec3 0 0 1,
+           scale = vec3 width height 0.5,
+           material = gouraudMaterial color }
 
 paddleShape : Float -> Float -> Renderable
 paddleShape width height =
-  { cube | scale <- vec3 width height 1 }
+  { cube | scale = vec3 width height 1 }
 
-display : (Int, Int) -> Game -> Element
+display : (Int, Int) -> Game -> Html msg
 display (w,h) {state, ball, player1, player2} =
   let gameCamera = { camera |
-        position <- vec3 0 0 -550,
-        aspectRatio <- gameWidth / gameHeight }
+        position = vec3 0 0 -550,
+        aspectRatio = gameWidth / gameHeight }
 
       gameLight = { light |
-        position <- vec3 -3 5 -4 }
+        position = vec3 -3 5 -4 }
 
       gameDimensions = { width = gameWidth, height = gameHeight }
 
       gameViewport = { viewport |
-        dimensions <- gameDimensions }
+        dimensions = gameDimensions }
 
       gameScene = { scene |
-        objects <- fromList [
+        objects = fromList [
           background pongGreen gameWidth gameHeight,
           displayObj ball (ballShape 15),
           displayObj player1 (paddleShape 10 40),
           displayObj player2 (paddleShape 10 40)
         ],
-        camera <- gameCamera,
-        light  <- gameLight,
-        viewport <- gameViewport }
+        camera = gameCamera,
+        light  = gameLight,
+        viewport = gameViewport }
   in render gameScene
 
 main = map2 display Window.dimensions gameState
