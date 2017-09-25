@@ -1,14 +1,14 @@
-module Engine.Render.Render exposing (renderObject, render)
+module Engine.Render.Render exposing (renderObject, render, renderWith)
 
 {-| This module contains functions to render objects and scenes onto
 a WebGL canvas context.
 
 # Render Functions
-@docs renderObject, render
+@docs renderObject, render, renderWith
 
 -}
 
-import WebGL exposing (Entity, entity, toHtml)
+import WebGL exposing (Entity, Option, entity, toHtml, toHtmlWith)
 import Html exposing (..)
 
 import Engine.Render.Renderable exposing (Renderable)
@@ -41,3 +41,14 @@ render : Scene -> List (Html.Attribute msg) -> Html msg
 render scene attributes = Array.map (renderObject scene) scene.objects 
   |> toList
   |> toHtml attributes
+
+
+{-| Function to render a scene to a WebGL canvas context. This function takes
+in a Scene and returns the WebGL canvas context.
+
+Note: The function renders only the objects in the objects list of the scene.
+-}
+renderWith : List Option -> Scene -> List (Html.Attribute msg) -> Html msg
+renderWith options scene attributes = Array.map (renderObject scene) scene.objects 
+  |> toList
+  |> toHtmlWith options attributes
