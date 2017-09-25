@@ -37,7 +37,7 @@ in a Scene and returns the WebGL canvas context.
 
 Note: The function renders only the objects in the objects list of the scene.
 -}
-render : Scene -> Html msg
-render scene = Array.map (renderObject scene) scene.objects 
+render : Scene -> List (Html.Attribute msg) -> Html msg
+render scene attributes = Array.map (renderObject scene) scene.objects 
   |> toList
-  |> toHtml []
+  |> toHtml attributes
