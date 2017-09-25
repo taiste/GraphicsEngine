@@ -5,7 +5,7 @@ module Engine exposing
     , MaterialProperty, Material, material
     , Mesh, triangleMesh, rectangleMesh, pyramidMesh, cubeMesh, sphereMesh
     , Renderable, renderable, triangle, rectangle, pyramid, cube, sphere
-    , render
+    , render, renderWith
     , Transform, transform
     , Viewport, viewport
     , Attribute, Uniform
@@ -80,7 +80,7 @@ changed and removes any unnecessary boilerplate.
 @docs Renderable, renderable, triangle, rectangle, pyramid, cube, sphere
 
 # Render Function
-@docs render
+@docs render, renderWith
 
 # Transform
 @docs Transform, transform
@@ -97,7 +97,7 @@ changed and removes any unnecessary boilerplate.
 
 import Math.Vector3 exposing (Vec3)
 import Html exposing (..)
-import WebGL exposing (Mesh)
+import WebGL exposing (Mesh, Option)
 
 ----------------- IMPORTED MODULES TO BE RE-EXPORTED ------------------------
 
@@ -429,6 +429,14 @@ Note: The function renders only the objects in the objects list of the scene.
 -}
 render : Scene -> List (Html.Attribute msg) -> Html msg
 render = Render.render
+
+{-| Function to render a scene to a WebGL canvas context. This function takes
+in a Scene and returns the WebGL canvas context.
+
+Note: The function renders only the objects in the objects list of the scene.
+-}
+renderWith : List Option -> Scene -> List (Html.Attribute msg) -> Html msg
+renderWith = Render.renderWith
 
 ----------------------------------------------------------------------------
 
