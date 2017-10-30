@@ -1,4 +1,4 @@
-module Engine.Mesh.Pyramid exposing (pyramidMesh, pyramid)
+module Engine.Mesh.Pyramid exposing (pyramidAttributes, pyramidMesh, pyramid)
 
 {-| This module contains the definition of a pyramid mesh and of a pyramid
 renderable object.
@@ -25,7 +25,10 @@ returns a pyramid mesh.
       pyramidMesh center height width
 -}
 pyramidMesh : Vec3 -> Float -> Float -> Mesh Attribute
-pyramidMesh center height width =
+pyramidMesh center height width = triangles <| pyramidAttributes center height width
+
+pyramidAttributes : Vec3 -> Float -> Float -> List (Attribute, Attribute, Attribute)
+pyramidAttributes center height width =
   let halfHeight = height / 2
       halfWidth = width / 2
       top = add center (vec3 0 halfHeight 0)
@@ -33,12 +36,11 @@ pyramidMesh center height width =
       bfr = add center (vec3 halfWidth -halfHeight -halfWidth)
       bbl = add center (vec3 -halfWidth -halfHeight halfWidth)
       bbr = add center (vec3 halfWidth -halfHeight halfWidth)
-  in triangles ((rectangleAttributes bbr bbl bfl bfr) ++
+  in (rectangleAttributes bbr bbl bfl bfr) ++
      (triangleAttribute bfl bfr top) ++
      (triangleAttribute bfr bbr top) ++
      (triangleAttribute bbr bbl top) ++
-     (triangleAttribute bbl bfl top))
-
+     (triangleAttribute bbl bfl top)
 
 {-| Default pyramid renderable object
 -}
