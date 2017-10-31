@@ -1,7 +1,41 @@
 module Engine.Shader.GouraudShader exposing (gouraudShader)
 
-gouraudShader : String
-gouraudShader = """
+import WebGL exposing (Shader)
+import Math.Vector3 exposing (Vec3)
+import Math.Matrix4 exposing (Mat4)
+import Engine.Material.Material exposing (Material)
+import Engine.Light.Light exposing (Light)
+
+gouraudShader : Shader
+        {} 
+        { a | light : Light, material : Material, viewMatrix : Mat4 }
+        { vNormal : Vec3, vPosition : Vec3, vViewPosition : Vec3 }
+gouraudShader = [glsl|
+precision mediump float;
+
+struct MaterialProperty {
+  vec3 color;
+  float strength;
+};
+
+struct Material {
+  MaterialProperty emissive;
+  MaterialProperty ambient;
+  MaterialProperty diffuse;
+  MaterialProperty specular;
+};
+
+struct Light {
+  vec3 position;
+  vec3 rotation;
+  vec3 color;
+  float intensity;
+};
+
+uniform Light light;
+uniform Material material;
+uniform mat4 viewMatrix;
+
 varying vec3 vPosition;
 varying vec3 vNormal;
 varying vec3 vViewPosition;
@@ -42,21 +76,7 @@ void main(){
 
   outputColor += 0.25 * specularContribution;
 
-  //outputColor *= lightContribution;
-
   gl_FragColor = vec4(outputColor, 1.0);
-
-  /*vec3 materialColor = normalize(
-    emissiveContribution + ambientContribution +
-    diffuseContribution  + specularContribution
-  ) * sqrt(3.0);
-
-  vec3 outputColor = normalize(
-    lightContribution * materialColor
-  ) * sqrt(3.0);
-
-  gl_FragColor = vec4(outputColor, 1.0);*/
-
 }
 
-"""
+|] 
