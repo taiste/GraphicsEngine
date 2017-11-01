@@ -1,4 +1,4 @@
-module Engine.Scene.Scene exposing (Scene, scene)
+module Engine.Scene.Scene exposing (Scene, scene, constructUniforms)
 
 {-| This module defines the Scene type and the default Scene object.
 A Scene contains a camera (the viewer's window to the scene), a list of
@@ -28,6 +28,17 @@ import Engine.Render.Renderable exposing (Renderable)
 import Engine.Light.Light exposing (Light, light)
 import Engine.Render.DefaultRenderable exposing (renderable)
 import Engine.Viewport.Viewport exposing (Viewport, viewport)
+import Engine.Material.MaterialValues exposing (MaterialProperty, MaterialValues)
+import Engine.Shader.Attribute exposing (Attribute)
+import Engine.Shader.Varying exposing (Varying)
+import Engine.Shader.Uniform exposing (Uniform)
+import Engine.Math.Utils exposing (
+  modelMatrix,
+  viewMatrix,
+  projectionMatrix,
+  modelViewMatrix,
+  modelViewProjectionMatrix,
+  normalMatrix)
 
 import Array exposing (Array, fromList)
 
@@ -61,3 +72,12 @@ scene = {
   objects  = fromList [renderable],
   light    = light,
   viewport = viewport }
+
+constructUniforms : Scene a Uniform v -> Renderable a Uniform v -> Uniform
+constructUniforms scene object = {
+  light = scene.light,
+  viewMatrix = viewMatrix scene.camera,
+  modelViewProjectionMatrix = modelViewProjectionMatrix object scene.camera,
+  modelViewMatrix = modelViewMatrix object scene.camera,
+  material = MaterialValues object.material.emissive object.material.ambient object.material.diffuse object.material.specular,
+  normalMatrix = normalMatrix object scene.camera }
