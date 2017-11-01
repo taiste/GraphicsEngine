@@ -15,11 +15,14 @@ in a scene and draws itself.
 
 -}
 
+import WebGL exposing (Shader)
 import Math.Vector3 exposing (Vec3, vec3)
-import Engine.Shader.VertexShader exposing (vertexShader)
-import Engine.Shader.FragmentShader exposing (fragmentShader)
+import Engine.Shader.VertexShader exposing (vertexShader, VertexShader)
+import Engine.Shader.FragmentShader exposing (fragmentShader, FragmentShader)
 import Engine.Material.MaterialValues exposing (MaterialProperty, MaterialValues)
-
+import Engine.Shader.Attribute exposing (Attribute)
+import Engine.Shader.Varying exposing (Varying)
+import Engine.Shader.Uniform exposing (Uniform)
 
 {-| Represent a material. A Material has properties to help it define
 and adapt how it reacts to light.
@@ -60,12 +63,12 @@ Note: Both the vertex and fragment shaders are written in the GLSL
 programming language. To use your own shaders simply make sure to pass them
 to a material as a String.
 -}
-type alias WithShaders c a b = { c |
-  vertexShader    : VertexShader a b,
-  fragmentShader  : FragmentShader b
+type alias WithShaders c attributes uniforms varyings = { c |
+  vertexShader    : Shader attributes uniforms varyings,
+  fragmentShader  : Shader {}         uniforms varyings
 }
 
-type alias Material a b = WithShaders MaterialValues a b
+type alias Material a u v = WithShaders MaterialValues a u v
 
 {-| Default material. Defines a material with a weak white ambient and no
 emissive, diffuse, or specular terms. (i.e. a simple flat material)
@@ -76,7 +79,7 @@ world to screen coordinates and a fragment shader that just returns a red pixel.
 This is ideal for creating your own materials and to just use a simple
 default material.
 -}
-material : Material a b 
+material : Material Attribute Uniform Varying 
 material = {
   emissive = MaterialProperty (vec3 0 0 0) 0,
   ambient  = MaterialProperty (vec3 1 1 1) 0.2,

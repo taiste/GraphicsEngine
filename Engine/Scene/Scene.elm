@@ -46,16 +46,16 @@ illuminate the scene, and a viewport to describe the context on which the
 scene will be drawn.
 
 -}
-type alias Scene = {
+type alias Scene a u v = {
   camera    : Camera,
-  objects   : Array Renderable,
+  objects   : Array (Renderable a u v),
   light     : Light,
   viewport  : Viewport
 }
 
 {-| Default scene object. Draws a red cube in the middle of the default context.
 -}
-scene : Scene
+scene : Scene Attribute Uniform Varying 
 scene = {
   camera   = camera,
   objects  = fromList [renderable],

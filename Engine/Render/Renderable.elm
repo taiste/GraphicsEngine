@@ -26,7 +26,7 @@ the renderable object responds to light and draws itself. The mesh describes
 the geometry of the renderable object (if it is a cube, a pyramid, etc...).
 
 -}
-type alias Renderable = Transform {
-  material : Material,
-  mesh     : Mesh Attribute
+type alias Renderable a u v = Transform {
+  material : Material a u v,
+  mesh     : Mesh a
 }
