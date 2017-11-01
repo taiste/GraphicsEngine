@@ -105,6 +105,7 @@ import Engine.Scene.Scene               as Scene
 import Engine.Camera.Camera             as Camera
 import Engine.Light.Light               as Light
 import Engine.Material.Material         as Material
+import Engine.Material.MaterialValues   as MaterialValues
 import Engine.Mesh.Triangle             as Triangle
 import Engine.Mesh.Rectangle            as Rectangle
 import Engine.Mesh.Cube                 as Cube
@@ -112,6 +113,7 @@ import Engine.Mesh.Pyramid              as Pyramid
 import Engine.Mesh.Sphere               as Sphere
 import Engine.Shader.Attribute          as Attribute
 import Engine.Shader.Uniform            as Uniform
+import Engine.Shader.Varying            as Varying
 import Engine.Render.Render             as Render
 import Engine.Render.Renderable         as Renderable
 import Engine.Render.DefaultRenderable  as DefaultRenderable
@@ -127,7 +129,7 @@ illuminate the scene, and a viewport to describe the context on which the
 scene will be drawn.
 
 -}
-type alias Scene = Scene.Scene
+type alias Scene = Scene.Scene Attribute Uniform Varying 
 
 {-| Default scene object. Draws a red cube in the middle of the default context.
 -}
@@ -247,7 +249,7 @@ full strength. If this property is used to represent specular highlights,
 then this means that these highlights will appear white and very visible.
 
 -}
-type alias MaterialProperty = Material.MaterialProperty
+type alias MaterialProperty = MaterialValues.MaterialProperty
 
 
 {-| Represent a material. A Material has properties to help it define
@@ -289,7 +291,7 @@ Note: Both the vertex and fragment shaders are written in the GLSL
 programming language. To use your own shaders simply make sure to pass them
 to a material as a String.
 -}
-type alias Material = Material.Material
+type alias Material = Material.Material Attribute Uniform Varying 
 
 
 {-| Default material. Defines a material with a weak white ambient and no
@@ -418,6 +420,8 @@ as uniforms.
 -}
 type alias Uniform = Uniform.Uniform
 
+type alias Varying = Varying.Varying
+
 ----------------------------------------------------------------------------
 
 ----------------- Re-export Engine.Render.Render ---------------------------
@@ -453,7 +457,7 @@ the renderable object responds to light and draws itself. The mesh describes
 the geometry of the renderable object (if it is a cube, a pyramid, etc...).
 
 -}
-type alias Renderable = Renderable.Renderable
+type alias Renderable = Renderable.Renderable Attribute Uniform Varying 
 
 
 {-| Default renderable object. Alias for the default cube object.
