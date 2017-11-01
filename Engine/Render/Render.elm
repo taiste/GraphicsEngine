@@ -1,4 +1,4 @@
-module Engine.Render.Render exposing (renderObject, render, renderWith)
+module Engine.Render.Render exposing (renderObject, render, renderWith, UniformMaker)
 
 {-| This module contains functions to render objects and scenes onto
 a WebGL canvas context.
@@ -12,19 +12,19 @@ import WebGL exposing (Entity, Option, Shader, entity, toHtml, toHtmlWith)
 import Html exposing (..)
 
 import Engine.Render.Renderable exposing (Renderable)
-import Engine.Scene.Scene exposing (Scene, constructUniforms)
-import Engine.Shader.Uniform exposing (Uniform)
+import Engine.Scene.Scene exposing (Scene)
 
 import Array exposing (map, toList)
 
+type alias UniformMaker a u v = Scene a u v -> Renderable a u v -> u
 {-| Function to render an object onto a scene. This function returns an
 Entity object which is what the webgl function from the WebGL library requires
 to draw anything onto a WebGL canvas context.
 
 Note: This function is mainly used as a helper function to render.
 -}
-renderObject : Scene a Uniform v -> Renderable a Uniform v -> Entity
-renderObject scene object =
+renderObject : UniformMaker a u v -> Scene a u v -> Renderable a u v -> Entity
+renderObject constructUniforms scene object =
   entity object.material.vertexShader
          object.material.fragmentShader
          object.mesh
@@ -35,8 +35,8 @@ in a Scene and returns the WebGL canvas context.
 
 Note: The function renders only the objects in the objects list of the scene.
 -}
-render : Scene a Uniform v -> List (Html.Attribute msg) -> Html msg
-render scene attributes = Array.map (renderObject scene) scene.objects 
+render : UniformMaker a u v -> Scene a u v -> List (Html.Attribute msg) -> Html msg
+render constructUniforms scene attributes = Array.map (renderObject constructUniforms scene) scene.objects 
   |> toList
   |> toHtml attributes
 
@@ -45,7 +45,7 @@ in a Scene and returns the WebGL canvas context.
 
 Note: The function renders only the objects in the objects list of the scene.
 -}
-renderWith : List Option -> Scene a Uniform v -> List (Html.Attribute msg) -> Html msg
-renderWith options scene attributes = Array.map (renderObject scene) scene.objects 
+renderWith : List Option -> UniformMaker a u v -> Scene a u v -> List (Html.Attribute msg) -> Html msg
+renderWith options constructUniforms scene attributes = Array.map (renderObject constructUniforms scene) scene.objects 
   |> toList
   |> toHtmlWith options attributes
