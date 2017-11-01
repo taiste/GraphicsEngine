@@ -1,4 +1,4 @@
-module Engine.Shader.VertexShader exposing (vertexShader)
+module Engine.Shader.VertexShader exposing (vertexShader, VertexShader)
 
 {-| This module contains the definition of the default vertex shader.
 
@@ -10,8 +10,14 @@ module Engine.Shader.VertexShader exposing (vertexShader)
 import WebGL exposing (Shader)
 import Math.Vector3 exposing (Vec3)
 import Math.Matrix4 exposing (Mat4)
+import Engine.Material.MaterialValues exposing (MaterialValues)
+import Engine.Light.Light exposing (Light)
+import Engine.Shader.Varying exposing (Varying)
 
-
+type alias VertexShader a u = Shader 
+        { a | position : Vec3 } 
+        { u | modelViewMatrix : Mat4, modelViewProjectionMatrix : Mat4, normalMatrix : Mat4 }
+        Varying
 
 
 {-| Default Vertex Shader.
@@ -21,10 +27,7 @@ transformation onto the vertex position and passes the new position
 as a varying to the fragment shader.
 
 -}
-vertexShader : Shader 
-        { a | position : Vec3 } 
-        { b | modelViewMatrix : Mat4, modelViewProjectionMatrix : Mat4, normalMatrix : Mat4 }
-        { vNormal : Vec3, vPosition : Vec3, vViewPosition : Vec3 }
+vertexShader : VertexShader a u
 vertexShader = 
     [glsl|
 precision mediump float;

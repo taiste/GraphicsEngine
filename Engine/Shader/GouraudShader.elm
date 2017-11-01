@@ -1,15 +1,23 @@
-module Engine.Shader.GouraudShader exposing (gouraudShader)
+module Engine.Shader.GouraudShader exposing (gouraudShader, GouraudShader)
 
 import WebGL exposing (Shader)
 import Math.Vector3 exposing (Vec3)
 import Math.Matrix4 exposing (Mat4)
-import Engine.Material.Material exposing (Material)
+import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Light.Light exposing (Light)
+import Engine.Shader.Varying exposing (Varying)
 
-gouraudShader : Shader
-        {} 
-        { a | light : Light, material : Material, viewMatrix : Mat4 }
-        { vNormal : Vec3, vPosition : Vec3, vViewPosition : Vec3 }
+type alias GouraudShader u = Shader
+        {}
+        { u
+            | light : Light
+            , material : MaterialValues
+            , viewMatrix : Mat4
+        }
+        Varying
+
+
+gouraudShader : GouraudShader u
 gouraudShader = [glsl|
 precision mediump float;
 

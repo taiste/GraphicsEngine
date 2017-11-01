@@ -13,8 +13,8 @@ a function to construct a uniform from a scene and a renderable object
 
 import Math.Vector3 exposing (Vec3)
 import Math.Matrix4 exposing (Mat4)
-import Engine.Render.Renderable exposing (Renderable)
-import Engine.Scene.Scene exposing (Scene)
+import Engine.Material.MaterialValues exposing (MaterialValues)
+import Engine.Light.Light exposing (Light)
 
 
 type alias Uniform = {
