@@ -25,7 +25,6 @@ used repeatedly in several areas in the Graphics Engine codebase.
 import Math.Vector3 as Vector3 exposing (..)
 import Math.Matrix4 as Matrix4 exposing (..)
 import Engine.Transform.Transform exposing (Transform)
-import Engine.Render.Renderable exposing (Renderable)
 import Engine.Camera.Camera exposing (Camera)
 
 -- Generic Math functions
