@@ -432,7 +432,7 @@ in a Scene and returns the WebGL canvas context.
 Note: The function renders only the objects in the objects list of the scene.
 -}
 render : Scene -> List (Html.Attribute msg) -> Html msg
-render = Render.render
+render = Render.render Scene.constructUniforms
 
 {-| Function to render a scene to a WebGL canvas context. This function takes
 in a Scene and returns the WebGL canvas context.
@@ -440,7 +440,7 @@ in a Scene and returns the WebGL canvas context.
 Note: The function renders only the objects in the objects list of the scene.
 -}
 renderWith : List Option -> Scene -> List (Html.Attribute msg) -> Html msg
-renderWith = Render.renderWith
+renderWith options = Render.renderWith options Scene.constructUniforms
 
 ----------------------------------------------------------------------------
 
