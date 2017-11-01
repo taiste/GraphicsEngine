@@ -1,4 +1,4 @@
-module Engine.Material.Material exposing (Material, material, MaterialProperty)
+module Engine.Material.Material exposing (Material, material)
 
 {-| This module defined the Material type and the default material object.
 A Material is a record type made to define how an object reacts to light
@@ -18,24 +18,8 @@ in a scene and draws itself.
 import Math.Vector3 exposing (Vec3, vec3)
 import Engine.Shader.VertexShader exposing (vertexShader)
 import Engine.Shader.FragmentShader exposing (fragmentShader)
+import Engine.Material.MaterialValues exposing (MaterialProperty, MaterialValues)
 
-{-| Represent a property of a material. Contains a color and a strength.
-By convention, full strength is set at 1 an no strength is 0,
-color values are between 0 and 1 (not 0 - 255).
-
-Example (creating a white specular property at full strength):
-
-    specularProperty = MaterialProperty (vec3 1 1 1) 1
-
-From the above, the specularProperty variable is given a white color and
-full strength. If this property is used to represent specular highlights,
-then this means that these highlights will appear white and very visible.
-
--}
-type alias MaterialProperty = {
-  color : Vec3,
-  strength : Float
-}
 
 {-| Represent a material. A Material has properties to help it define
 and adapt how it reacts to light.
@@ -76,14 +60,12 @@ Note: Both the vertex and fragment shaders are written in the GLSL
 programming language. To use your own shaders simply make sure to pass them
 to a material as a String.
 -}
-type alias Material = {
-  emissive : MaterialProperty,
-  ambient  : MaterialProperty,
-  diffuse  : MaterialProperty,
-  specular : MaterialProperty,
-  vertexShader    : String,
-  fragmentShader  : String
+type alias WithShaders c a b = { c |
+  vertexShader    : VertexShader a b,
+  fragmentShader  : FragmentShader b
 }
+
+type alias Material a b = WithShaders MaterialValues a b
 
 {-| Default material. Defines a material with a weak white ambient and no
 emissive, diffuse, or specular terms. (i.e. a simple flat material)
@@ -94,7 +76,7 @@ world to screen coordinates and a fragment shader that just returns a red pixel.
 This is ideal for creating your own materials and to just use a simple
 default material.
 -}
-material : Material
+material : Material a b 
 material = {
   emissive = MaterialProperty (vec3 0 0 0) 0,
   ambient  = MaterialProperty (vec3 1 1 1) 0.2,
