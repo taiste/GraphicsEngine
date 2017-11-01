@@ -19,6 +19,8 @@ import Engine.Mesh.Rectangle exposing (rectangleMesh)
 import Engine.Mesh.Triangle exposing (triangleAttribute, triangle)
 import Engine.Render.Renderable exposing (Renderable)
 import Engine.Shader.Attribute exposing (Attribute)
+import Engine.Shader.Varying exposing (Varying)
+import Engine.Shader.Uniform exposing (Uniform)
 
 
 {-| Function that takes a center point/vector, the radius, the number of
@@ -53,6 +55,6 @@ sphereMesh center radius segmentsR segmentsY =
 
 {-| Default sphere renderable object. Located at the origin with radius of 0.5.
 -}
-sphere : Renderable
+sphere : Renderable Attribute Uniform Varying 
 sphere = {
   triangle | mesh = sphereMesh (vec3 0 0 0) 0.5 20 20 }

@@ -17,6 +17,8 @@ import Engine.Mesh.Rectangle exposing (rectangleAttributes)
 import Engine.Mesh.Triangle exposing  (triangle, triangleAttribute)
 import Engine.Render.Renderable exposing (Renderable)
 import Engine.Shader.Attribute exposing (Attribute)
+import Engine.Shader.Varying exposing (Varying)
+import Engine.Shader.Uniform exposing (Uniform)
 
 
 {-| Function that takes a center point/vector, a height and a width and
@@ -44,6 +46,6 @@ pyramidAttributes center height width =
 
 {-| Default pyramid renderable object
 -}
-pyramid : Renderable
+pyramid : Renderable Attribute Uniform Varying 
 pyramid = {
   triangle | mesh = pyramidMesh (vec3 0 0 0) 1 1 }

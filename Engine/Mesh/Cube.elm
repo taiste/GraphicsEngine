@@ -16,6 +16,8 @@ import Math.Vector3 exposing (Vec3, add, vec3)
 import Engine.Mesh.Rectangle exposing (rectangle, rectangleAttributes)
 import Engine.Render.Renderable exposing (Renderable)
 import Engine.Shader.Attribute exposing (Attribute)
+import Engine.Shader.Varying exposing (Varying)
+import Engine.Shader.Uniform exposing (Uniform)
 
 
 {-| Function that takes a center point/vector and a size and returns a
@@ -43,6 +45,6 @@ cubeMesh center size =
 
 {-| Default cube renderable object
 -}
-cube : Renderable
+cube : Renderable Attribute Uniform Varying 
 cube = {
   rectangle | mesh = cubeMesh (vec3 0 0 0) 1 }
