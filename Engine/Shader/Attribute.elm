@@ -1,4 +1,4 @@
-module Engine.Shader.Attribute exposing (..)
+module Engine.Shader.Attribute exposing (Attribute)
 
 {-| This module contains the definition of the Attribute type.
 A vertex shader takes a set of attributes as input for each vertex.
