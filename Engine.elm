@@ -129,7 +129,7 @@ illuminate the scene, and a viewport to describe the context on which the
 scene will be drawn.
 
 -}
-type alias Scene = Scene.Scene Attribute Uniform Varying 
+type alias Scene = Scene.Scene MaterialValues.MaterialValues Attribute Uniform Varying 
 
 {-| Default scene object. Draws a red cube in the middle of the default context.
 -}
@@ -291,7 +291,7 @@ Note: Both the vertex and fragment shaders are written in the GLSL
 programming language. To use your own shaders simply make sure to pass them
 to a material as a String.
 -}
-type alias Material = Material.Material Attribute Uniform Varying 
+type alias Material = Material.Material MaterialValues.MaterialValues Attribute Uniform Varying 
 
 
 {-| Default material. Defines a material with a weak white ambient and no
@@ -457,7 +457,7 @@ the renderable object responds to light and draws itself. The mesh describes
 the geometry of the renderable object (if it is a cube, a pyramid, etc...).
 
 -}
-type alias Renderable = Renderable.Renderable Attribute Uniform Varying 
+type alias Renderable = Renderable.Renderable MaterialValues.MaterialValues Attribute Uniform Varying 
 
 
 {-| Default renderable object. Alias for the default cube object.
