@@ -14,6 +14,7 @@ import WebGL exposing (Mesh, triangles)
 import Math.Vector3 exposing (Vec3, vec3)
 import Engine.Mesh.Triangle exposing (triangle, triangleAttribute)
 import Engine.Render.Renderable exposing (Renderable)
+import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
 import Engine.Shader.Uniform exposing (Uniform)
@@ -37,5 +38,5 @@ rectangleAttributes p q r s = (triangleAttribute p q r) ++ (triangleAttribute r 
 
 {-| Default rectangle renderable object
 -}
-rectangle : Renderable Attribute Uniform Varying 
+rectangle : Renderable MaterialValues Attribute Uniform Varying 
 rectangle = { triangle | mesh = rectangleMesh (vec3 -0.5 -0.5 0) (vec3 0.5 -0.5 0) (vec3 0.5 0.5 0) (vec3 -0.5 0.5 0) }

@@ -10,6 +10,7 @@ circular dependencies.
 -}
 
 import Engine.Render.Renderable exposing (Renderable)
+import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Mesh.Cube exposing (cube)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
@@ -17,5 +18,5 @@ import Engine.Shader.Uniform exposing (Uniform)
 
 {-| Default renderable object. Alias for the default cube object.
 -}
-renderable : Renderable Attribute Uniform Varying 
+renderable : Renderable MaterialValues Attribute Uniform Varying 
 renderable = cube

@@ -15,6 +15,7 @@ import WebGL exposing (Mesh, triangles)
 import Math.Vector3 exposing (Vec3, add, vec3)
 import Engine.Mesh.Rectangle exposing (rectangle, rectangleAttributes)
 import Engine.Render.Renderable exposing (Renderable)
+import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
 import Engine.Shader.Uniform exposing (Uniform)
@@ -45,6 +46,6 @@ cubeMesh center size =
 
 {-| Default cube renderable object
 -}
-cube : Renderable Attribute Uniform Varying 
+cube : Renderable MaterialValues Attribute Uniform Varying 
 cube = {
   rectangle | mesh = cubeMesh (vec3 0 0 0) 1 }

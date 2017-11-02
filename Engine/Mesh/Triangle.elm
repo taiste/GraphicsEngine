@@ -15,11 +15,12 @@ custom geometry.
 
 import WebGL exposing (Mesh, triangles)
 import Math.Vector3 exposing (Vec3, vec3, add, normalize, cross, sub)
+import Engine.Material.Material exposing (material)
+import Engine.Render.Renderable exposing (Renderable)
+import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
 import Engine.Shader.Uniform exposing (Uniform)
-import Engine.Material.Material exposing (material)
-import Engine.Render.Renderable exposing (Renderable)
 
 
 {-| Function to construct a triangle mesh from three points.
@@ -41,7 +42,7 @@ triangleAttribute p q r =
 
 {-| Default triangle renderable object
 -}
-triangle : Renderable Attribute Uniform Varying 
+triangle : Renderable MaterialValues Attribute Uniform Varying 
 triangle =
   { material = material
   , mesh     = triangleMesh (vec3 -0.5 -0.5 0) (vec3 0.5 -0.5 0) (vec3 0 0.5 0)

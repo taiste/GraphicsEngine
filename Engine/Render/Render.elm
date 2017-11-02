@@ -16,14 +16,14 @@ import Engine.Scene.Scene exposing (Scene)
 
 import Array exposing (map, toList)
 
-type alias UniformMaker a u v = Scene a u v -> Renderable a u v -> u
+type alias UniformMaker d a u v = Scene d a u v -> Renderable d a u v -> u
 {-| Function to render an object onto a scene. This function returns an
 Entity object which is what the webgl function from the WebGL library requires
 to draw anything onto a WebGL canvas context.
 
 Note: This function is mainly used as a helper function to render.
 -}
-renderObject : UniformMaker a u v -> Scene a u v -> Renderable a u v -> Entity
+renderObject : UniformMaker d a u v -> Scene d a u v -> Renderable d a u v -> Entity
 renderObject constructUniforms scene object =
   entity object.material.vertexShader
          object.material.fragmentShader
@@ -35,7 +35,7 @@ in a Scene and returns the WebGL canvas context.
 
 Note: The function renders only the objects in the objects list of the scene.
 -}
-render : UniformMaker a u v -> Scene a u v -> List (Html.Attribute msg) -> Html msg
+render : UniformMaker d a u v -> Scene d a u v -> List (Html.Attribute msg) -> Html msg
 render constructUniforms scene attributes = Array.map (renderObject constructUniforms scene) scene.objects 
   |> toList
   |> toHtml attributes
@@ -45,7 +45,7 @@ in a Scene and returns the WebGL canvas context.
 
 Note: The function renders only the objects in the objects list of the scene.
 -}
-renderWith : List Option -> UniformMaker a u v -> Scene a u v -> List (Html.Attribute msg) -> Html msg
+renderWith : List Option -> UniformMaker d a u v -> Scene d a u v -> List (Html.Attribute msg) -> Html msg
 renderWith options constructUniforms scene attributes = Array.map (renderObject constructUniforms scene) scene.objects 
   |> toList
   |> toHtmlWith options attributes
