@@ -63,7 +63,7 @@ Note: Both the vertex and fragment shaders are written in the GLSL
 programming language. To use your own shaders simply make sure to pass them
 to a material as a String.
 -}
-type alias Material d attributes uniforms varyings = { d |
+type alias Material values attributes uniforms varyings = { values |
   vertexShader    : Shader attributes uniforms varyings,
   fragmentShader  : Shader {}         uniforms varyings
 }
