@@ -79,5 +79,5 @@ constructUniforms scene object = {
   viewMatrix = viewMatrix scene.camera,
   modelViewProjectionMatrix = modelViewProjectionMatrix object scene.camera,
   modelViewMatrix = modelViewMatrix object scene.camera,
-  material = MaterialValues object.material.emissive object.material.ambient object.material.diffuse object.material.specular,
+  material = object.material.values,
   normalMatrix = normalMatrix object scene.camera }

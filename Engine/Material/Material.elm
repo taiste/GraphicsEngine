@@ -63,9 +63,10 @@ Note: Both the vertex and fragment shaders are written in the GLSL
 programming language. To use your own shaders simply make sure to pass them
 to a material as a String.
 -}
-type alias Material values attributes uniforms varyings = { values |
-  vertexShader    : Shader attributes uniforms varyings,
-  fragmentShader  : Shader {}         uniforms varyings
+type alias Material values attributes uniforms varyings = {
+  values : values,
+  vertexShader   : Shader attributes uniforms varyings,
+  fragmentShader : Shader {}         uniforms varyings
 }
 
 {-| Default material. Defines a material with a weak white ambient and no
@@ -79,9 +80,11 @@ default material.
 -}
 material : Material MaterialValues Attribute Uniform Varying 
 material = {
-  emissive = MaterialProperty (vec3 0 0 0) 0,
-  ambient  = MaterialProperty (vec3 1 1 1) 0.2,
-  diffuse  = MaterialProperty (vec3 0 0 0) 0,
-  specular = MaterialProperty (vec3 0 0 0) 0,
+  values = {
+      emissive = MaterialProperty (vec3 0 0 0) 0,
+      ambient  = MaterialProperty (vec3 1 1 1) 0.2,
+      diffuse  = MaterialProperty (vec3 0 0 0) 0,
+      specular = MaterialProperty (vec3 0 0 0) 0
+  },
   vertexShader = vertexShader,
   fragmentShader = fragmentShader }
