@@ -12,12 +12,14 @@ renderable object.
 -}
 
 import List
+import Array exposing (fromList)
 
 import WebGL exposing (Mesh, triangles)
 import Math.Vector3 exposing (Vec3, add, vec3)
 import Engine.Mesh.Rectangle exposing (rectangleMesh)
 import Engine.Mesh.Triangle exposing (triangleAttribute, triangle)
 import Engine.Render.Renderable exposing (Renderable)
+import Engine.Material.Material exposing (material)
 import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
@@ -58,4 +60,4 @@ sphereMesh center radius segmentsR segmentsY =
 -}
 sphere : Renderable MaterialValues Attribute Uniform Varying 
 sphere = {
-  triangle | mesh = sphereMesh (vec3 0 0 0) 0.5 20 20 }
+  triangle | parts = fromList [{ mesh = sphereMesh (vec3 0 0 0) 0.5 20 20, material = material }] }

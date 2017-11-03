@@ -11,10 +11,12 @@ renderable object.
 
 -}
 
+import Array exposing (fromList)
 import WebGL exposing (Mesh, triangles)
 import Math.Vector3 exposing (Vec3, add, vec3)
 import Engine.Mesh.Rectangle exposing (rectangle, rectangleAttributes)
 import Engine.Render.Renderable exposing (Renderable)
+import Engine.Material.Material exposing (material)
 import Engine.Material.MaterialValues exposing (MaterialValues)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
@@ -48,4 +50,4 @@ cubeMesh center size =
 -}
 cube : Renderable MaterialValues Attribute Uniform Varying 
 cube = {
-  rectangle | mesh = cubeMesh (vec3 0 0 0) 1 }
+  rectangle | parts = fromList [{ mesh = cubeMesh (vec3 0 0 0) 1, material = material }] }

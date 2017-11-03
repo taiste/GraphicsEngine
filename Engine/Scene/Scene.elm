@@ -28,6 +28,7 @@ import Engine.Render.Renderable exposing (Renderable)
 import Engine.Light.Light exposing (Light, light)
 import Engine.Render.DefaultRenderable exposing (renderable)
 import Engine.Viewport.Viewport exposing (Viewport, viewport)
+import Engine.Transform.Transform exposing (Transform)
 import Engine.Material.MaterialValues exposing (MaterialProperty, MaterialValues)
 import Engine.Shader.Attribute exposing (Attribute)
 import Engine.Shader.Varying exposing (Varying)
@@ -73,11 +74,11 @@ scene = {
   light    = light,
   viewport = viewport }
 
-constructUniforms : Scene MaterialValues a Uniform v -> Renderable MaterialValues a Uniform v -> Uniform
-constructUniforms scene object = {
+constructUniforms : Scene MaterialValues a Uniform v -> Renderable MaterialValues a Uniform v -> MaterialValues -> Uniform
+constructUniforms scene transform material = {
   light = scene.light,
   viewMatrix = viewMatrix scene.camera,
-  modelViewProjectionMatrix = modelViewProjectionMatrix object scene.camera,
-  modelViewMatrix = modelViewMatrix object scene.camera,
-  material = object.material.values,
-  normalMatrix = normalMatrix object scene.camera }
+  modelViewProjectionMatrix = modelViewProjectionMatrix transform scene.camera,
+  modelViewMatrix = modelViewMatrix transform scene.camera,
+  material = material,
+  normalMatrix = normalMatrix transform scene.camera }
