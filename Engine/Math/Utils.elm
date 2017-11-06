@@ -2,7 +2,7 @@ module Engine.Math.Utils exposing
   ( safeNormalize, safeMakeRotate
   , getSideVector, getUpVector, getForwardVector, getTargetPosition
   , modelMatrix, viewMatrix, projectionMatrix
-  , matrixIdentity, modelViewMatrix, modelViewProjectionMatrix, normalMatrix
+  , matrixIdentity, modelViewMatrix, modelViewProjectionMatrix, normalMatrix, makeRotation, hamiltonProduct
   )
 
 {-| This module is just a simple collection of mathematical operations
@@ -12,7 +12,7 @@ used repeatedly in several areas in the Graphics Engine codebase.
 @docs safeNormalize, safeMakeRotate
 
 # Common Camera operations
-@docs getSideVector, getUpVector, getForwardVector, getTargetPosition
+@docs getSideVector, getUpVector, getForwardVector, getTargetPosition, makeRotation, hamiltonProduct
 
 # Model View Projection
 @docs modelMatrix, viewMatrix, projectionMatrix
@@ -161,3 +161,32 @@ modelViewProjectionMatrix object camera =
 normalMatrix : Transform a -> Transform b -> Matrix4.Mat4
 normalMatrix object camera =
   Matrix4.inverseOrthonormal (Matrix4.transpose (modelViewMatrix object camera))
+
+{-| Make rotation quaternion from rotation axis and angle
+-}
+makeRotation : Vec3 -> Float -> Vec4
+makeRotation axis angle = 
+    let cosAngle = cos (angle / 2)
+        sinAngle = sin (angle / 2)
+        xComp = (Vector3.getX axis) * -sinAngle
+        yComp = (Vector3.getY axis) * -sinAngle
+        zComp = (Vector3.getZ axis) * -sinAngle
+    in Vector4.vec4 xComp yComp zComp cosAngle
+
+{-| Hamilton product aka quaternion product -}
+hamiltonProduct : Vec4 -> Vec4 -> Vec4
+hamiltonProduct first second = 
+    let x1 = Vector4.getX first
+        y1 = Vector4.getY first
+        z1 = Vector4.getZ first
+        r1 = Vector4.getW first
+        x2 = Vector4.getX second
+        y2 = Vector4.getY second
+        z2 = Vector4.getZ second
+        r2 = Vector4.getW second
+        newX = r1 * x2 + x1 * r2 + y1 * z2 - z1 * y2
+        newY = r1 * y2 + y1 * r2 + z1 * x2 - x1 * z2
+        newZ = r1 * z2 + z1 * r2 + x1 * y2 - y1 * x2
+        newR = r1 * r2 - x1 * x2 - y1 * y2 - z1 * z2
+    in Vector4.vec4 newX newY newZ newR
+
