@@ -12,6 +12,7 @@ avoid circular dependencies.
 import WebGL exposing (Mesh)
 
 import Math.Vector3 exposing (vec3)
+import Math.Vector4 exposing (vec4)
 import Engine.Transform.Transform exposing (Transform)
 import Engine.Material.Material exposing (Material)
 import Array exposing (Array, fromList)
@@ -40,6 +41,6 @@ simpleRenderable : Mesh a -> Material d a u v -> Renderable d a u v
 simpleRenderable mesh material = 
     { parts = fromList [RenderablePart material mesh]
     , position = vec3 0 0 0
-    , rotation = vec3 0 0 0
+    , rotation = vec4 1 0 0 0
     , scale    = vec3 1 1 1
     }

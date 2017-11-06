@@ -23,6 +23,7 @@ used repeatedly in several areas in the Graphics Engine codebase.
 -}
 
 import Math.Vector3 as Vector3 exposing (..)
+import Math.Vector4 as Vector4 exposing (..)
 import Math.Matrix4 as Matrix4 exposing (..)
 import Engine.Transform.Transform exposing (Transform)
 import Engine.Camera.Camera exposing (Camera)
@@ -51,12 +52,16 @@ In essence,
     safeMakeRotate (vec3 0 0 0) == Matrix4.identity
 
 -}
-safeMakeRotate : Vector3.Vec3 -> Matrix4.Mat4
-safeMakeRotate vector =
-  if (Vector3.lengthSquared vector == 0)
-  then Matrix4.identity
-  else Matrix4.makeRotate (sqrt <| Vector3.lengthSquared vector) (Vector3.normalize vector)
-
+safeMakeRotate : Vector4.Vec4 -> Matrix4.Mat4
+safeMakeRotate vector =    
+    let imag1 = Vector4.getX vector
+        imag2 = Vector4.getY vector
+        imag3 = Vector4.getZ vector
+        imagLength = sqrt (imag1 * imag1 + imag2 * imag2 + imag3 * imag3)
+        rotAxis = Vector3.vec3 (imag1 / imagLength) (imag2 / imagLength) (imag3 / imagLength)
+        angle = 2 * atan2 imagLength (Vector4.getW vector)
+    in if imagLength < 0.000001 then matrixIdentity else makeRotate angle rotAxis
+ 
 {-| Renaming of the identity matrix because it clashes with the identity
 function in Basics which defines the function that just returns its input
 
@@ -72,19 +77,8 @@ used by cameras to help orient themselves.
 -}
 getSideVector : Transform a -> Vector3.Vec3
 getSideVector transform =
-  let yaw   = Vector3.getX transform.rotation
-      pitch = Vector3.getY transform.rotation
-      roll  = Vector3.getZ transform.rotation
-      sx = sin yaw
-      cx = cos yaw
-      sy = sin pitch
-      cy = cos pitch
-      sz = sin roll
-      cz = cos roll
-      vx = cy * cz - sy * sx * sz
-      vy = cy * sz + sy * sx * cz
-      vz = -sy * cx
-  in Vector3.vec3 vx vy vz
+  let rotation = safeMakeRotate transform.rotation 
+  in Matrix4.transform rotation Vector3.i
 
 
 {-| Calculate the right-handed up vector of a transform. This is mainly
@@ -93,19 +87,8 @@ used by cameras to help orient themselves and create the view matrix.
 -}
 getUpVector : Transform a -> Vector3.Vec3
 getUpVector transform =
-  let yaw   = Vector3.getX transform.rotation
-      pitch = Vector3.getY transform.rotation
-      roll  = Vector3.getZ transform.rotation
-      sx = sin yaw
-      cx = cos yaw
-      sy = sin pitch
-      cy = cos pitch
-      sz = sin roll
-      cz = cos roll
-      vx = -cx * sz
-      vy = cx * cz
-      vz = sx
-  in Vector3.vec3 vx vy vz
+  let rotation = safeMakeRotate transform.rotation 
+  in Matrix4.transform rotation Vector3.j
 
 {-| Calculate the vector pointing outward of a transform given a position
 and rotation. This is mainly used by cameras to help orient themselves
@@ -114,19 +97,8 @@ and create the view matrix.
 -}
 getForwardVector : Transform a -> Vector3.Vec3
 getForwardVector transform =
-  let yaw   = Vector3.getX transform.rotation
-      pitch = Vector3.getY transform.rotation
-      roll  = Vector3.getZ transform.rotation
-      sx = sin yaw
-      cx = cos yaw
-      sy = sin pitch
-      cy = cos pitch
-      sz = sin roll
-      cz = cos roll
-      vx = sy * cz + cy * sx * sz
-      vy = sy * sz - cy * sx * cz
-      vz = cy * cx
-  in Vector3.vec3 vx vy vz
+  let rotation = safeMakeRotate transform.rotation 
+  in Matrix4.transform rotation Vector3.k
 
 {-| Calculate the target position of a transform (i.e. where the transform
 points at). This is mainly used to figure out what a camera points at.

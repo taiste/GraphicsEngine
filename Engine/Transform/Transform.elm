@@ -12,6 +12,7 @@ the default transform object.
 -}
 
 import Math.Vector3 exposing (Vec3, vec3)
+import Math.Vector4 exposing (Vec4, vec4)
 
 {-| A transform is an object with a position, a rotation, and a scale.
 This is mean to be able to represent linear transformations in space. As
@@ -20,7 +21,7 @@ such, one can model where an object is (position), what is its orientation
 -}
 type alias Transform a = { a |
   position : Vec3,
-  rotation : Vec3,
+  rotation : Vec4,
   scale    : Vec3
 }
 
@@ -31,12 +32,12 @@ Defined as follows:
 
     transform = {
       position = vec3 0 0 0,
-      rotation = vec3 0 0 0,
+      rotation = vec4 0 0 0 1,
       scale    = vec3 1 1 1 }
 
 -}
 transform : Transform {}
 transform = {
   position = vec3 0 0 0,
-  rotation = vec3 0 0 0,
+  rotation = vec4 0 0 0 1,
   scale    = vec3 1 1 1 }
